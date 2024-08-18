@@ -87,6 +87,16 @@ class ErrorCodes:
         message="The confirmation code does not match.",
         http_status=HTTPStatus.BAD_REQUEST
     )
+    UNAUTHORIZED = ErrorDescriptor(
+        code="2007",
+        message="You are not authorized to perform this action.",
+        http_status=HTTPStatus.UNAUTHORIZED
+    )
+    USER_ALREADY_EXISTS = ErrorDescriptor(
+        code="2008",
+        message="A user with this information already exists.",
+        http_status=HTTPStatus.CONFLICT
+    )
 
 
 class ServiceUnavailableSupportCodes:

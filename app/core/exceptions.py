@@ -102,3 +102,21 @@ class CodeMismatchException(AppException):
     Reference: https://docs.aws.amazon.com/cognitoidentityprovider/latest/APIReference/API_ConfirmSignUp.html
     """
     error_descriptor = ErrorCodes.CODE_MISMATCH
+
+
+class UnauthorizedException(AppException):
+    """
+    Exception raised when a user is unauthorized to perform an action.
+
+    Reference: https://docs.aws.amazon.com/cognitoidentityprovider/latest/APIReference/API_InitiateAuth.html
+    """
+    error_descriptor = ErrorCodes.UNAUTHORIZED
+
+
+class UserAlreadyExistsException(AppException):
+    """
+    Exception raised when a user with the same credentials already exists.
+
+    Reference: https://docs.aws.amazon.com/cognitoidentityprovider/latest/APIReference/API_SignUp.html
+    """
+    error_descriptor = ErrorCodes.USER_ALREADY_EXISTS
