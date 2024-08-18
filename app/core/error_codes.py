@@ -119,7 +119,7 @@ class ServiceUnavailableSupportCodes:
         https://docs.aws.amazon.com/cognito/latest/developerguide/troubleshooting.html#invalid-parameter-exception
     """
 
-    COGNITO_INTERNAL_ERROR = "COG-INT-004"
+    COGNITO_INTERNAL_ERROR = "COG-INT-0004"
     """
     Exception raised for internal server errors.
 
