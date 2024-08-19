@@ -1,4 +1,14 @@
 fastapi==0.112.0
 uvicorn==0.30.6
+
 pydantic==2.8.2
 pydantic-settings==2.4.0
+email-validator==2.2.0
+
+graphene==3.3
+graphql-core==3.2.3
+ariadne==0.23.0
+
+boto3==1.35.0
+
+
