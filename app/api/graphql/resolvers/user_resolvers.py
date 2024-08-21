@@ -7,9 +7,11 @@ This module defines the resolvers for GraphQL mutations related to user authenti
 from ariadne import MutationType
 from app.services.aws.cognito.auth import CognitoService
 from app.api.models.auth_models import (
-    LoginRequest, SignUpRequest, ConfirmSignUpRequest, ResendConfirmationCodeRequest,
-    TokenRefreshRequest, ChangePasswordRequest, ForgotPasswordRequest,
-    ConfirmForgotPasswordRequest, UpdateUserAttributesRequest
+    LoginRequest, LoginResponse, SignUpRequest, SignUpResponse, ConfirmSignUpRequest,
+    ConfirmSignUpResponse, ResendConfirmationCodeRequest, ResendConfirmationCodeResponse,
+    TokenRefreshRequest, TokenRefreshResponse, ChangePasswordRequest, ChangePasswordResponse,
+    ForgotPasswordRequest, ForgotPasswordResponse, ConfirmForgotPasswordRequest,
+    ConfirmForgotPasswordResponse, UpdateUserAttributesRequest, UpdateUserAttributesResponse
 )
 
 # Define the MutationType instance for GraphQL
@@ -17,7 +19,7 @@ mutation = MutationType()
 
 
 @mutation.field("login")
-async def resolve_login(_, info, username: str, password: str) -> dict:
+async def resolve_login(_, info, username: str, password: str) -> LoginResponse:
     """
     Resolver for the `login` mutation.
 
@@ -28,7 +30,7 @@ async def resolve_login(_, info, username: str, password: str) -> dict:
         password (str): The password of the user.
 
     Returns:
-        dict: A dictionary containing login-related tokens.
+        LoginResponse: A Pydantic model containing login-related tokens.
     """
     request = LoginRequest(username=username, password=password)
     return await CognitoService.login(request)
@@ -38,7 +40,7 @@ async def resolve_login(_, info, username: str, password: str) -> dict:
 async def resolve_sign_up(
         _, info, username: str, password: str, email: str, phone_number: str = None,
         given_name: str = None, family_name: str = None
-) -> dict:
+) -> SignUpResponse:
     """
     Resolver for the `signUp` mutation.
 
@@ -53,7 +55,7 @@ async def resolve_sign_up(
         family_name (str, optional): The family name of the new user.
 
     Returns:
-        dict: A dictionary with sign-up result and user subscription identifier.
+        SignUpResponse: A Pydantic model with sign-up result and user subscription identifier.
     """
     request = SignUpRequest(
         username=username, password=password, email=email,
@@ -63,7 +65,7 @@ async def resolve_sign_up(
 
 
 @mutation.field("confirmSignUp")
-async def resolve_confirm_sign_up(_, info, username: str, confirmation_code: str) -> dict:
+async def resolve_confirm_sign_up(_, info, username: str, confirmation_code: str) -> ConfirmSignUpResponse:
     """
     Resolver for the `confirmSignUp` mutation.
 
@@ -74,14 +76,14 @@ async def resolve_confirm_sign_up(_, info, username: str, confirmation_code: str
         confirmation_code (str): The confirmation code received by the user.
 
     Returns:
-        dict: A dictionary containing the result of the confirmation process.
+        ConfirmSignUpResponse: A Pydantic model containing the result of the confirmation process.
     """
     request = ConfirmSignUpRequest(username=username, confirmation_code=confirmation_code)
     return await CognitoService.confirm_sign_up(request)
 
 
 @mutation.field("resendConfirmationCode")
-async def resolve_resend_confirmation_code(_, info, username: str) -> dict:
+async def resolve_resend_confirmation_code(_, info, username: str) -> ResendConfirmationCodeResponse:
     """
     Resolver for the `resendConfirmationCode` mutation.
 
@@ -91,14 +93,14 @@ async def resolve_resend_confirmation_code(_, info, username: str) -> dict:
         username (str): The username for which to resend the confirmation code.
 
     Returns:
-        dict: A dictionary containing the result of the resend operation.
+        ResendConfirmationCodeResponse: A Pydantic model containing the result of the resend operation.
     """
     request = ResendConfirmationCodeRequest(username=username)
     return await CognitoService.resend_confirmation_code(request)
 
 
 @mutation.field("refreshToken")
-async def resolve_refresh_token(_, info, refresh_token: str) -> dict:
+async def resolve_refresh_token(_, info, refresh_token: str) -> TokenRefreshResponse:
     """
     Resolver for the `refreshToken` mutation.
 
@@ -108,7 +110,7 @@ async def resolve_refresh_token(_, info, refresh_token: str) -> dict:
         refresh_token (str): The refresh token to be used for obtaining new tokens.
 
     Returns:
-        dict: A dictionary with new access and ID tokens.
+        TokenRefreshResponse: A Pydantic model with new access and ID tokens.
     """
     request = TokenRefreshRequest(refresh_token=refresh_token)
     return await CognitoService.refresh_token(request)
@@ -117,7 +119,7 @@ async def resolve_refresh_token(_, info, refresh_token: str) -> dict:
 @mutation.field("changePassword")
 async def resolve_change_password(
         _, info, access_token: str, previous_password: str, proposed_password: str
-) -> dict:
+) -> ChangePasswordResponse:
     """
     Resolver for the `changePassword` mutation.
 
@@ -129,7 +131,7 @@ async def resolve_change_password(
         proposed_password (str): The new password proposed by the user.
 
     Returns:
-        dict: A dictionary containing the result of the password change operation.
+        ChangePasswordResponse: A Pydantic model containing the result of the password change operation.
     """
     request = ChangePasswordRequest(
         access_token=access_token, previous_password=previous_password, proposed_password=proposed_password
@@ -138,7 +140,7 @@ async def resolve_change_password(
 
 
 @mutation.field("forgotPassword")
-async def resolve_forgot_password(_, info, username: str) -> dict:
+async def resolve_forgot_password(_, info, username: str) -> ForgotPasswordResponse:
     """
     Resolver for the `forgotPassword` mutation.
 
@@ -148,7 +150,7 @@ async def resolve_forgot_password(_, info, username: str) -> dict:
         username (str): The username for which to initiate the password reset process.
 
     Returns:
-        dict: A dictionary containing the result of the forgot password operation.
+        ForgotPasswordResponse: A Pydantic model containing the result of the forgot password operation.
     """
     request = ForgotPasswordRequest(username=username)
     return await CognitoService.forgot_password(request)
@@ -157,7 +159,7 @@ async def resolve_forgot_password(_, info, username: str) -> dict:
 @mutation.field("confirmForgotPassword")
 async def resolve_confirm_forgot_password(
         _, info, username: str, confirmation_code: str, new_password: str
-) -> dict:
+) -> ConfirmForgotPasswordResponse:
     """
     Resolver for the `confirmForgotPassword` mutation.
 
@@ -169,7 +171,7 @@ async def resolve_confirm_forgot_password(
         new_password (str): The new password to set.
 
     Returns:
-        dict: A dictionary containing the result of the password reset confirmation.
+        ConfirmForgotPasswordResponse: A Pydantic model containing the result of the password reset confirmation.
     """
     request = ConfirmForgotPasswordRequest(
         username=username, confirmation_code=confirmation_code, new_password=new_password
@@ -178,7 +180,7 @@ async def resolve_confirm_forgot_password(
 
 
 @mutation.field("updateUserAttributes")
-async def resolve_update_user_attributes(_, info, access_token: str, attributes: list) -> dict:
+async def resolve_update_user_attributes(_, info, access_token: str, attributes: list) -> UpdateUserAttributesResponse:
     """
     Resolver for the `updateUserAttributes` mutation.
 
@@ -189,7 +191,7 @@ async def resolve_update_user_attributes(_, info, access_token: str, attributes:
         attributes (list): A list of attributes to update.
 
     Returns:
-        dict: A dictionary containing the result of the user attributes update.
+        UpdateUserAttributesResponse: A Pydantic model containing the result of the user attributes update.
     """
     request = UpdateUserAttributesRequest(access_token=access_token, attributes=attributes)
     return await CognitoService.update_user_attributes(request)
