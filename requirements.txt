@@ -10,5 +10,6 @@ graphql-core==3.2.3
 ariadne==0.23.0
 
 boto3==1.35.0
+httpx==0.27.0
 
 

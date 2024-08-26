@@ -7,8 +7,10 @@ class AppException(HTTPException):
     """
     Custom application exception that utilizes ErrorDescriptor for error details.
     """
+    error_descriptor = ErrorCodes.INTERNAL_ERROR  # Default descriptor; should be overridden in subclasses.
 
-    def __init__(self, error_descriptor: ErrorDescriptor, support_code: Optional[str] = None):
+    def __init__(self, error_descriptor: ErrorDescriptor = None, support_code: Optional[str] = None):
+        error_descriptor = error_descriptor or self.error_descriptor
         super().__init__(
             status_code=error_descriptor.http_status,
             detail={

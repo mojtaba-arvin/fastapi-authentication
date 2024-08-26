@@ -163,14 +163,16 @@ class ChangePasswordRequest(BaseModel):
     Model for changing password request.
 
     Attributes:
-        access_token (constr(min_length=1)): Current access token.
         previous_password (constr(min_length=6, max_length=128)): The user's current password.
         proposed_password (constr(min_length=6, max_length=128)): The new password to set.
+
+    Note:
+        Access Token is required for authorization and should be sent in the Authorization header as Bearer token.
+        Therefore, it is not included in this model.
 
     Reference:
         [AWS Cognito ChangePassword API](https://docs.aws.amazon.com/cognitoidentitypools/latest/APIReference/API_ChangePassword.html)
     """
-    access_token: constr(min_length=1)
     previous_password: constr(min_length=6, max_length=128)
     proposed_password: constr(min_length=6, max_length=128)
 
@@ -249,13 +251,15 @@ class UpdateUserAttributesRequest(BaseModel):
     Model for updating user attributes request.
 
     Attributes:
-        access_token (constr(min_length=1)): Access token to authorize the request.
         attributes (Dict[str, str]): Dictionary of attributes to update.
+
+    Note:
+        Access Token is required for authorization and should be sent in the Authorization header as Bearer token.
+        Therefore, it is not included in this model.
 
     Reference:
         [AWS Cognito UpdateUserAttributes API](https://docs.aws.amazon.com/cognitoidentitypools/latest/APIReference/API_UpdateUserAttributes.html)
     """
-    access_token: constr(min_length=1)
     attributes: Dict[str, str]
 
 
@@ -264,7 +268,7 @@ class UpdateUserAttributesResponse(BaseModel):
     Model for updating user attributes response.
 
     Attributes:
-        message (str): Message indicating the result of the update process.
+        message (str): Message indicating the result of the attribute update process.
 
     Reference:
         [AWS Cognito UpdateUserAttributes API](https://docs.aws.amazon.com/cognitoidentitypools/latest/APIReference/API_UpdateUserAttributes.html)
